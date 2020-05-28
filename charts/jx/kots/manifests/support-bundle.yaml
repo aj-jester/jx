@@ -1,0 +1,13 @@
+apiVersion: troubleshoot.replicated.com/v1beta1
+kind: Collector
+metadata:
+  name: jx
+spec:
+  collectors:
+    - clusterInfo: {}
+    - clusterResources: {}
+    - logs:
+        collectorName: jx
+        name: jx/logs
+        selector:
+          - release=jx

@@ -1,0 +1,7 @@
+apiVersion: kots.io/v1beta1
+kind: Application
+metadata:
+  name: jx
+spec:
+  title: Jenkins-X
+  icon: https://jenkins-x.github.io/jenkins-x-website/img/profile.png

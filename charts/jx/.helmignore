@@ -21,3 +21,4 @@
 *.tmproj
 *.png
 Makefile
+kots/
