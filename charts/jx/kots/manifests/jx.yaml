@@ -8,18 +8,62 @@ spec:
     chartVersion: 2.0.399
   values:
     image:
-      tag: 2.1.50
+      tag: 2.1.59
     restartPolicy: Always
-    deployment:
-      enabled: true
     service:
       enabled: true
-    serviceaccount:
-      enabled: true
-    role:
-      enabled: true
-    clusterrole:
-      enabled: true
+
+  optionalValues:
+    - when: '{{repl ConfigOptionEquals "pod_kind" "pod_kind_deployment"}}'
+      values:
+        deployment:
+          enabled: true
+        replicaCount: "repl{{ ConfigOption `replica_count`}}"
+    - when: '{{repl ConfigOptionEquals "pod_kind" "pod_kind_daemonset"}}'
+      values:
+        daemonset:
+          enabled: true
+    - when: 'repl{{ ConfigOptionEquals "k8s_service_account" "1" }}'
+      values:
+        serviceaccount:
+          enabled: true
+    - when: 'repl{{ ConfigOptionEquals "k8s_role" "1" }}'
+      values:
+        role:
+          enabled: true
+    - when: 'repl{{ ConfigOptionEquals "k8s_clusterrole" "1" }}'
+      values:
+        clusterrole:
+          enabled: true
+          rules:
+          - apiGroups:
+            - apiextensions.k8s.io
+            resources:
+            - customresourcedefinitions
+            verbs:
+            - get
+          - apiGroups:
+            - ""
+            resources:
+            - namespaces
+            verbs:
+            - get
+            - delete
+            - list
+          - apiGroups:
+            - ""
+            resources:
+            - deployments
+            verbs:
+            - get
+    - when: 'repl{{ ConfigOptionEquals "k8s_job" "1" }}'
+      values:
+        job:
+          enabled: true
+    - when: 'repl{{ ConfigOptionEquals "k8s_cronjob" "1" }}'
+      values:
+        cronjob:
+          enabled: true
 
   # When building AirGap, optional sub-charts need to be explicitly enabled so kots can bundle the image. If sub-chart is enabled by default no need to add them here.
   # Kots does not include the image unless the service is explicitly enabled during the bundle building process.

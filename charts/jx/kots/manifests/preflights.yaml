@@ -18,12 +18,12 @@ spec:
               when: ">= 1.15.0"
               message: Your cluster meets the recommended and required versions of Kubernetes.
     - customResourceDefinition:
-        customResourceDefinitionName: ingressroutes.contour.heptio.com
+        customResourceDefinitionName: environments.jenkins.io
         outcomes:
           - fail:
-              message: IngressRoutes CRD not found!
+              message: Jenkins CRD not found!
           - pass:
-              message: IngressRoutes CRD found!
+              message: Jenkins CRD found.
     - containerRuntime:
         outcomes:
           - pass:
@@ -69,31 +69,18 @@ spec:
           - warn:
               message: Unable to determine the distribution of Kubernetes
     - nodeResources:
-        checkName: Must have at least 3 nodes in the cluster, with 5 recommended
+        checkName: Every node in the cluster must have at least 8 GB of memory, with 10 GB recommended
         outcomes:
         - fail:
-            when: "count() < 3"
-            message: This application requires at least 3 nodes.
-            uri: https://kurl.sh/docs/install-with-kurl/adding-nodes
+            when: "min(memoryCapacity) < 8Gi"
+            message: Node has less than 8 GB of memory.
+            uri: https://kurl.sh/docs/install-with-kurl/system-requirements
         - warn:
-            when: "count() < 5"
-            message: This application recommends at last 5 nodes.
-            uri: https://kurl.sh/docs/install-with-kurl/adding-nodes
-        - pass:
-            message: This cluster has enough nodes.
-    - nodeResources:
-        checkName: Every node in the cluster must have at least 10 GB of memory, with 32 GB recommended
-        outcomes:
-        - fail:
             when: "min(memoryCapacity) < 10Gi"
-            message: All nodes must have at least 10 GB of memory.
-            uri: https://kurl.sh/docs/install-with-kurl/system-requirements
-        - warn:
-            when: "min(memoryCapacity) < 32Gi"
-            message: All nodes are recommended to have at least 32 GB of memory.
+            message: Node has less than 10 GB of memory.
             uri: https://kurl.sh/docs/install-with-kurl/system-requirements
         - pass:
-            message: All nodes have at least 32 GB of memory.
+            message: All nodes have at least 10 GB of memory.
     - nodeResources:
         checkName: Total CPU Cores in the cluster is 4 or greater
         outcomes:

@@ -13,51 +13,50 @@ spec:
           help_text: Enter the hostname.
           type: text
           required: true
-        - name: email_address
-          title: Email Address
-          help_text: Enter your Email Address.
-          type: text
-          default: email@example.com
-    - name: postgresql
-      title: Postgresql
-      description: Postgresql
-      items:
-        - name: postgres_type
+        - name: pod_kind
           type: select_one
-          title: Postgresql Configuration
-          default: postgres_embedded
+          title: Jenkins Pod Kind
+          default: pod_kind_deployment
           items:
-            - name: postgres_embedded
-              title: Embedded Postgres
-            - name: postgres_external
-              title: External Postgres
-        - name: postgres_external_host
-          title: Postgres Host
-          when: '{{repl ConfigOptionEquals "postgres_type" "postgres_external"}}'
+            - name: pod_kind_deployment
+              title: Deployment
+            - name: pod_kind_daemonset
+              title: Daemonset
+        - name: replica_count
+          title: Replica Count
           type: text
-          required: true
-        - name: postgres_external_port
-          title: Postgres Port
-          when: '{{repl ConfigOptionEquals "postgres_type" "postgres_external"}}'
-          type: text
-          required: true
-        - name: postgres_external_database
-          title: Postgres Database
-          when: '{{repl ConfigOptionEquals "postgres_type" "postgres_external"}}'
-          type: text
-          required: true
-        - name: postgres_external_username
-          title: Postgres Username
-          when: '{{repl ConfigOptionEquals "postgres_type" "postgres_external"}}'
-          type: text
-          required: true
-        - name: postgres_external_password_secret
-          title: Postgres Password Secret
-          when: '{{repl ConfigOptionEquals "postgres_type" "postgres_external"}}'
-          type: text
-          required: true
-        - name: postgres_external_password_key
-          title: Postgres Password Key
-          when: '{{repl ConfigOptionEquals "postgres_type" "postgres_external"}}'
-          type: text
-          required: true
+          default: "1"
+          when: repl{{ ConfigOptionEquals "pod_kind" "pod_kind_deployment"}}
+    - name: rbac_settings
+      title: Jenkins X K8s RBAC Settings
+      description: Let Jenkins X manage K8s RBAC Settings
+      items:
+        - name: k8s_service_account
+          title: Service Account
+          help_text: Service Account
+          type: bool
+          default: "1"
+        - name: k8s_role
+          title: Role
+          help_text: Role
+          type: bool
+          default: "1"
+        - name: k8s_clusterrole
+          title: Cluster Role
+          help_text: Cluster Role
+          type: bool
+          default: "1"
+    - name: jobs_settings
+      title: Jenkins X K8s Jobs Settings
+      description: Jenkins X K8s Jobs Settings
+      items:
+        - name: k8s_job
+          title: Jenkins X Job
+          help_text: Jenkins X Job
+          type: bool
+          default: "0"
+        - name: k8s_cronjob
+          title: Jenkins X CronJob
+          help_text: Jenkins X CronJob
+          type: bool
+          default: "0"
